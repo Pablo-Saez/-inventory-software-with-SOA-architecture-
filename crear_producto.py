@@ -3,6 +3,20 @@ import socket
 import sys
 import logging
 
+def bdCall(msg):
+    print("desde crear producto, este es el msg " + msg)
+
+    sock.sendall(msg.encode())
+
+    # Recibir respuesta
+    response_len_str = sock.recv(5).decode()
+    response_len = int(response_len_str)
+    response_service = sock.recv(5).decode()
+    response_data = sock.recv(response_len - 5).decode()
+
+    #print(f"Recibido: {response_data}")
+    return response_data
+
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -10,6 +24,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_address = ('localhost', 5000)
 logging.info('connecting to {} port {}'.format(*server_address))
 sock.connect(server_address)
+
 
 try:
     # Resto de tu código de socket y operaciones de base de datos aquí
@@ -42,15 +57,16 @@ try:
                 msg = f"{msg_len:05d}{service}{cadena_completa}"
                 print("desde crear producto, este es el msg " + msg)
                 
-                sock.sendall(msg.encode())
+                # sock.sendall(msg.encode())
                 
-                # Receive response
-                response_len_str = sock.recv(5).decode()
-                response_len = int(response_len_str)
-                response_service = sock.recv(5).decode()
-                response_data = sock.recv(response_len - 5).decode()
-
-                print(f"Received: {response_data}")
+                # # Receive response
+                # response_len_str = sock.recv(5).decode()
+                # response_len = int(response_len_str)
+                # response_service = sock.recv(5).decode()
+                # response_data = sock.recv(response_len - 5).decode()
+                response_data = bdCall(msg)
+                print(response_data)
+                # print(f"Received: {response_data}")
                 #logging.info('Ingresando...')
                 
                 #logging.info(priv)
