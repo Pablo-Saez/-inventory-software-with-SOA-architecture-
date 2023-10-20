@@ -35,6 +35,21 @@ try:
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
             return row_count
+    
+    def CreateProduct(name,description,is_fragile,require_cold_chain,quantity):
+        cursor.execute("""
+            INSERT INTO producto (name, description, is_fragile, require_cold_chain,quantity)
+            VALUES (%s, %s, %s, %s,%s)
+        """, (name, description,is_fragile,require_cold_chain,quantity))
+        row_count = cursor.rowcount
+        print(row_count)
+        conn.commit()
+        if row_count > 0:
+            logging.info("Usuario creado con éxito.")
+            return row_count
+
+
+
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -59,6 +74,7 @@ try:
                 logging.info("Processing sql...")
                 try:
                     data = data.decode().split()
+                    print(data)
                     cadena = data[0]
                     opcion = cadena[5:]
                     print(opcion)
@@ -75,6 +91,23 @@ try:
                         message = '00015datoscreateuser {}'.format(priv).encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
+                    
+                    
+                    elif opcion == '2':
+                        
+                        Name = data[1]
+                        description = data[2]
+                        is_fragile = data[3]
+                        require_cold_chain = data[4]
+                        quantity = data[5]
+                        print(Name)
+                        logging.info('Ingresando producto')
+                        priv = CreateProduct(Name,description,is_fragile, require_cold_chain,quantity)
+                        logging.info(priv)
+                        message = '00018datoscreateproduct'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
+
                 except Exception as e:
                     logging.error(f'Error: {e}')
                     logging.info('-------------------------------')
