@@ -10,7 +10,7 @@ sock.connect(server_address)
 try:
     # Prepare message
     service = "datos"
-    data = " 1 212222222 claudio lopez goleador"
+    data = "1 212222222223 claudio lopez goleador"
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"
     print(msg)

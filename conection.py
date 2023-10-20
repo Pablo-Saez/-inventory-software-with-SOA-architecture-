@@ -59,12 +59,16 @@ try:
                 logging.info("Processing sql...")
                 try:
                     data = data.decode().split()
-                    opcion = data[1]
+                    cadena = data[0]
+                    opcion = cadena[5:]
+                    print(opcion)
                     if opcion == '1':
-                        Rut = data[2]
-                        Name = data[3]
-                        Last_name = data[4]
-                        role = data[5]
+                        Rut = data[1]
+                        Name = data[2]
+                        Last_name = data[3]
+                        role = data[4]
+                        print(Rut)
+
                         logging.info('Ingresando...')
                         priv = CreateUser(Rut, Name, Last_name, role)
                         logging.info(priv)
