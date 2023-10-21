@@ -10,7 +10,12 @@ sock.connect(server_address)
 try:
     # Prepare message
     service = "crusr"
-    data = "Pablo supervisor pablo@pablo.cl clavepablo"
+    name = input("Ingrese nombre del trabajador: ")
+    role = input("Ingrese cargo del trabajador: ")
+    email = input("Ingrese correo del trabajador: ")
+    password = input("Ingrese contraseña del trabajador: ") 
+    data = name+" "+role+" "+email+" "+password  
+    
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"
     print(msg)
@@ -24,6 +29,7 @@ try:
     response_data = sock.recv(response_len - 5).decode()
 
     print(f"Received: {response_data}")
+
 
 finally:
     print('closing socket')

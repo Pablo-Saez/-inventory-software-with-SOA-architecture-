@@ -10,7 +10,14 @@ sock.connect(server_address)
 try:
     # Prepare message
     service = "crprd"
-    data = "Camiseta Camiseta_de_algodón_de_manga_corta false false 100"
+    print("CREAR PRODUCTO")
+    nombre = input("Ingrese el nombre: ")
+    descripcion = input("Ingrese la descripción: ")
+    fragil = input("Indique si es frágil (true/false): ")
+    cadena_fria = input("Indique si requiere cadena fría (true/false): ")
+    cantidad = input("Ingrese la cantidad: ")
+    
+    data=  nombre + ' ' + descripcion + ' ' + fragil + ' ' + cadena_fria + ' ' + cantidad
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"
     print(msg)
