@@ -9,7 +9,7 @@ sock.connect(server_address)
 
 try:
     # Prepare message
-    service = "cruser"
+    service = "crusr"
     data = "Pablo supervisor pablo@pablo.cl clavepablo"
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"

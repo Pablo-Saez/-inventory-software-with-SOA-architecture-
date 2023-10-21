@@ -4,7 +4,7 @@ import sys
 import logging
 
 def bdCall(msg):
-    print("desde crear usuario, este es el msg " + msg)
+    print("desde crear producto, este es el msg " + msg)
 
     sock.sendall(msg.encode())
 
@@ -28,12 +28,12 @@ sock.connect(server_address)
 
 try:
     # Resto de tu código de socket y operaciones de base de datos aquí
-    message = b'00010sinitcrusr' #cruser = create user
+    message = b'00010sinitcrprd' #crprd = create product
     logging.info('sending {!r}'.format(message))
     sock.sendall(message)
 
     while True:
-        logging.info("Waiting for transactions create user")
+        logging.info("Waiting for transactions create product")
         amount_received = 0
         amount_expected = int(sock.recv(5))
         while amount_received < amount_expected:
@@ -46,16 +46,16 @@ try:
 
                 cadena = data[0]
                 name = cadena[5:]
-                role = data[1]
-                email = data[2]
-                password= data[3]
-
+                description = data[1]
+                is_fragile = data[2]
+                require_cold_chain= data[3]
+                quantity = data[4]
                 
                 service = "datos"
-                cadena_completa = '3'+' '+ name + ' ' + role + ' ' + email + ' ' + password
+                cadena_completa = '2'+' '+ name + ' ' + description + ' ' + is_fragile + ' ' + require_cold_chain + ' ' + quantity
                 msg_len = len(cadena_completa) + len(service)
                 msg = f"{msg_len:05d}{service}{cadena_completa}"
-                print("desde crear user, este es el msg " + msg)
+                print("desde crear producto, este es el msg " + msg)
                 
                 # sock.sendall(msg.encode())
                 
@@ -70,7 +70,7 @@ try:
                 #logging.info('Ingresando...')
                 
                 #logging.info(priv)
-                message = '00015datoscreateuser'.encode()
+                message = '00015datoscreateproduct'.encode()
                 logging.info('sending {!r}'.format(message))                    
                 sock.sendall(message)
             except Exception as e:

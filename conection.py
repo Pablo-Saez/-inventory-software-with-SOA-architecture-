@@ -50,7 +50,7 @@ try:
 
     def CreateUser(name,role,email,password):
         cursor.execute("""
-            INSERT INTO user (name, role, email, password)
+            INSERT INTO users (name, role, email, password)
             VALUES (%s, %s, %s, %s)
         """, (name, role,email,password))
         row_count = cursor.rowcount
@@ -127,7 +127,7 @@ try:
                         password = data[4]
                         print(Name)
                         logging.info('Creando Usuario')
-                        priv = CreateProduct(Name,role,email, password)
+                        priv = CreateUser(Name,role,email, password)
                         logging.info(priv)
                         message = '00015datoscreateuser'.encode()
                         logging.info('sending {!r}'.format(message))
