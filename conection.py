@@ -23,18 +23,18 @@ try:
             sql_script = sql_file.read()
             cursor.execute(sql_script)
 
-    def CreateUser(Rut, Name, Last_name, Role):
-        cursor.execute("""
-            INSERT INTO usuario (rut, nombre, apellido, cargo)
-            VALUES (%s, %s, %s, %s)
-        """, (Rut, Name, Last_name, Role))
+    # def CreateUser(Rut, Name, Last_name, Role):
+    #     cursor.execute("""
+    #         INSERT INTO usuario (rut, nombre, apellido, cargo)
+    #         VALUES (%s, %s, %s, %s)
+    #     """, (Rut, Name, Last_name, Role))
 
-        row_count = cursor.rowcount
-        print(row_count)
-        conn.commit()
-        if row_count > 0:
-            logging.info("Usuario creado con éxito.")
-            return row_count
+    #     row_count = cursor.rowcount
+    #     print(row_count)
+    #     conn.commit()
+    #     if row_count > 0:
+    #         logging.info("Usuario creado con éxito.")
+    #         return row_count
     
     def CreateProduct(name,description,is_fragile,require_cold_chain,quantity):
         cursor.execute("""
@@ -48,6 +48,17 @@ try:
             logging.info("Usuario creado con éxito.")
             return row_count
 
+    def CreateUser(name,role,email,password):
+        cursor.execute("""
+            INSERT INTO user (name, role, email, password)
+            VALUES (%s, %s, %s, %s)
+        """, (name, role,email,password))
+        row_count = cursor.rowcount
+        print(row_count)
+        conn.commit()
+        if row_count > 0:
+            logging.info("Usuario creado con éxito.")
+            return row_count
 
 
 
@@ -105,6 +116,20 @@ try:
                         priv = CreateProduct(Name,description,is_fragile, require_cold_chain,quantity)
                         logging.info(priv)
                         message = '00018datoscreateproduct'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
+
+                    elif opcion == '3':
+                        
+                        Name = data[1]
+                        role = data[2]
+                        email = data[3]
+                        password = data[4]
+                        print(Name)
+                        logging.info('Creando Usuario')
+                        priv = CreateProduct(Name,role,email, password)
+                        logging.info(priv)
+                        message = '00015datoscreateuser'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
 
