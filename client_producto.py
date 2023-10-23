@@ -11,13 +11,18 @@ try:
     # Prepare message
     service = "crprd"
     print("CREAR PRODUCTO")
-    nombre = input("Ingrese el nombre: ")
-    descripcion = input("Ingrese la descripción: ")
-    fragil = input("Indique si es frágil (true/false): ")
-    cadena_fria = input("Indique si requiere cadena fría (true/false): ")
-    cantidad = input("Ingrese la cantidad: ")
-    
-    data=  nombre + ' ' + descripcion + ' ' + fragil + ' ' + cadena_fria + ' ' + cantidad
+    # nombre = input("Ingrese el nombre: ")
+    # caracteristicas = input("Ingrese la descripción: ")
+    # fecha_vencimiento = input("Ingrese la fecha en formato yyyy-mm-dd, (en caso de no tener aprete enter)")
+    # temperatura_optima = input("Indique la temperatura optima del producto: ")
+    # stock = input("Ingrese la cantidad del producto: ")
+
+    nombre = 'papas_fritas'
+    caracteristicas = 'papas_que_esta_fritas'
+    fecha_vencimiento = "2023-12-31"
+    temperatura_optima = '3'
+    stock = '500'    
+    data=  nombre + ' ' + caracteristicas + ' ' + fecha_vencimiento + ' ' + temperatura_optima + ' ' + stock
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"
     print(msg)

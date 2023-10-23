@@ -2,18 +2,30 @@ import psycopg2
 import socket
 import sys
 import logging
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 try:
     # Establece la conexión con la base de datos PostgreSQL
+    #    conn = psycopg2.connect("postgres://powmhjrm:VNJkgl6HTbKcJKfqjzyy6n9EO2FZjbIV@suleiman.db.elephantsql.com/powmhjrm")
+
+    dbname = os.getenv("DB_NAME")
+    user = os.getenv("DB_USER")
+    password = os.getenv("DB_PASSWORD")
+    host = os.getenv("DB_HOST")
+    port = os.getenv("DB_PORT")
+
+    # Establecer la conexión con la base de datos PostgreSQL utilizando las variables de entorno
     conn = psycopg2.connect(
-        dbname="inventario",
-        user="postgres",
-        password="password",
-        host="localhost",
-        port="5432"
+        dbname=dbname,
+        user=user,
+        password=password,
+        host=host,
+        port=port
     )
+
     logging.info("Conexión a la base de datos exitosa.")
 
     cursor = conn.cursor()
@@ -23,42 +35,31 @@ try:
             sql_script = sql_file.read()
             cursor.execute(sql_script)
 
-    # def CreateUser(Rut, Name, Last_name, Role):
-    #     cursor.execute("""
-    #         INSERT INTO usuario (rut, nombre, apellido, cargo)
-    #         VALUES (%s, %s, %s, %s)
-    #     """, (Rut, Name, Last_name, Role))
 
-    #     row_count = cursor.rowcount
-    #     print(row_count)
-    #     conn.commit()
-    #     if row_count > 0:
-    #         logging.info("Usuario creado con éxito.")
-    #         return row_count
-    
-    def CreateProduct(name,description,is_fragile,require_cold_chain,quantity):
+    def CreateUser(Nombre, Correo, Contrasena, Tipo):
         cursor.execute("""
-            INSERT INTO producto (name, description, is_fragile, require_cold_chain,quantity)
-            VALUES (%s, %s, %s, %s,%s)
-        """, (name, description,is_fragile,require_cold_chain,quantity))
+            INSERT INTO usuario ( nombre, correo, contrasena, tipo)
+            VALUES ( %s, %s, %s, %s)
+        """, ( Nombre, Correo, Contrasena, Tipo))
         row_count = cursor.rowcount
         print(row_count)
         conn.commit()
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
             return row_count
-
-    def CreateUser(name,role,email,password):
+    def CreateProduct(Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock):
         cursor.execute("""
-            INSERT INTO users (name, role, email, password)
-            VALUES (%s, %s, %s, %s)
-        """, (name, role,email,password))
-        row_count = cursor.rowcount
-        print(row_count)
+            INSERT INTO Producto (Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock))
         conn.commit()
+
+        row_count = cursor.rowcount
         if row_count > 0:
-            logging.info("Usuario creado con éxito.")
+            logging.info("Producto creado con éxito.")
             return row_count
+
+
 
 
 
@@ -90,14 +91,9 @@ try:
                     opcion = cadena[5:]
                     print(opcion)
                     if opcion == '1':
-                        Rut = data[1]
-                        Name = data[2]
-                        Last_name = data[3]
-                        role = data[4]
-                        print(Rut)
-
+  
                         logging.info('Ingresando...')
-                        priv = CreateUser(Rut, Name, Last_name, role)
+                        priv = CreateUser(*data[1:6])
                         logging.info(priv)
                         message = '00015datoscreateuser {}'.format(priv).encode()
                         logging.info('sending {!r}'.format(message))
@@ -106,33 +102,25 @@ try:
                     
                     elif opcion == '2':
                         
-                        Name = data[1]
-                        description = data[2]
-                        is_fragile = data[3]
-                        require_cold_chain = data[4]
-                        quantity = data[5]
-                        print(Name)
                         logging.info('Ingresando producto')
-                        priv = CreateProduct(Name,description,is_fragile, require_cold_chain,quantity)
+                        priv = CreateProduct(*data[1:6])
                         logging.info(priv)
                         message = '00018datoscreateproduct'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
-
                     elif opcion == '3':
-                        
+                        #(ID_Usuario, Nombre, Correo, Contrasena, Tipo))
                         Name = data[1]
-                        role = data[2]
-                        email = data[3]
-                        password = data[4]
+                        email = data[2]
+                        password = data[3]
+                        role = data[4]
                         print(Name)
                         logging.info('Creando Usuario')
-                        priv = CreateUser(Name,role,email, password)
+                        priv = CreateUser(Name,email,password, role)
                         logging.info(priv)
                         message = '00015datoscreateuser'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
-
                 except Exception as e:
                     logging.error(f'Error: {e}')
                     logging.info('-------------------------------')

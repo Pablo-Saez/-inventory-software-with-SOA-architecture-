@@ -42,33 +42,29 @@ try:
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
             try:
+                print(data)
                 data = data.decode().split()
+                Nombre = data[0]
+                Nombre = Nombre[5:]
+                print(Nombre)
+                # Extract data for CreateProduct
+                
+                Caracteristicas = data[1]
+                Fecha_Vencimiento = data[2]
+                Temperatura_Optima = data[3]
+                Stock = data[4]
+                
 
-                cadena = data[0]
-                name = cadena[5:]
-                description = data[1]
-                is_fragile = data[2]
-                require_cold_chain= data[3]
-                quantity = data[4]
+                # Prepare data to be sent in a format that connection.py understands
+                formatted_data = f"2 {Nombre} {Caracteristicas} {Fecha_Vencimiento} {Temperatura_Optima} {Stock}"
+                msg_len = len(formatted_data) + 5  # 5 for "datos"
+                msg = f"{msg_len:05d}datos{formatted_data}"
                 
-                service = "datos"
-                cadena_completa = '2'+' '+ name + ' ' + description + ' ' + is_fragile + ' ' + require_cold_chain + ' ' + quantity
-                msg_len = len(cadena_completa) + len(service)
-                msg = f"{msg_len:05d}{service}{cadena_completa}"
-                print("desde crear producto, este es el msg " + msg)
+                logging.info(f'Sending this msg to the db: {msg}')
                 
-                # sock.sendall(msg.encode())
-                
-                # # Receive response
-                # response_len_str = sock.recv(5).decode()
-                # response_len = int(response_len_str)
-                # response_service = sock.recv(5).decode()
-                # response_data = sock.recv(response_len - 5).decode()
+                # Call to send this formatted message
                 response_data = bdCall(msg)
-                print(response_data)
-                # print(f"Received: {response_data}")
-                #logging.info('Ingresando...')
-                
+                logging.info(f'Database response: {response_data}')
                 #logging.info(priv)
                 message = '00015datoscreateproduct'.encode()
                 logging.info('sending {!r}'.format(message))                    
