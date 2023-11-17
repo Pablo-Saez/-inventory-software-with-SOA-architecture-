@@ -58,6 +58,20 @@ try:
         if row_count > 0:
             logging.info("Producto creado con éxito.")
             return row_count
+    def Login(email, password):
+        cursor.execute("""
+            SELECT * FROM usuario
+            WHERE correo = %s AND contrasena = %s
+        """, (email, password))
+        result = cursor.fetchall()
+        print(result)
+        if result:
+            # Si hay coincidencias, significa que la cuenta existe
+            return result
+        else:
+            # Si no hay coincidencias, la cuenta no existe
+            return None
+
 
 
 
@@ -122,6 +136,26 @@ try:
                         message = '00015datoscreateuser'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
+                    elif opcion == '4':
+                        email = data[1]
+                        password = data[2]
+                        print("desde el connection:")
+                        print(email)
+                        print(password)
+                        data_login=Login(email,password)
+                        nombre = data_login[0][1]
+                        tipo = data_login[0][4]
+                        response = nombre + ' ' + tipo
+                        response_len = len(nombre) + len(tipo)
+                        #HAY UN PROBLEMA AQUI. CUANDO ENVIO LA RESPUESTA DEVUELTA
+                        #AL LOGIN SE ENVIA UN PROPIO MENSAJE A LA BD REPITIENDO EL PROCESO
+                        message = f"{response_len:05d}datos{response}"
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message.encode())
+
+
+
+
                 except Exception as e:
                     logging.error(f'Error: {e}')
                     logging.info('-------------------------------')
