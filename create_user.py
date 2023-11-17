@@ -1,21 +1,8 @@
-import psycopg2
+# import psycopg2
 import socket
 import sys
 import logging
 
-def bdCall(msg):
-    print("desde crear usuario, este es el msg " + msg)
-
-    sock.sendall(msg.encode())
-
-    # Recibir respuesta
-    response_len_str = sock.recv(5).decode()
-    response_len = int(response_len_str)
-    response_service = sock.recv(5).decode()
-    response_data = sock.recv(response_len - 5).decode()
-
-    #print(f"Recibido: {response_data}")
-    return response_data
 
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
@@ -28,7 +15,7 @@ sock.connect(server_address)
 
 try:
     # Resto de tu código de socket y operaciones de base de datos aquí
-    message = b'00010sinitcrusr' #cruser = create user
+    message = b'00010sinituserc' #cruser = create user
     logging.info('sending {!r}'.format(message))
     sock.sendall(message)
 
@@ -41,8 +28,9 @@ try:
             amount_received += len(data)
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
+            data = data.decode().split()
             try:
-                data = data.decode().split()
+                print(data)
 
                 cadena = data[0]
                 name = cadena[5:]
@@ -50,29 +38,27 @@ try:
                 email = data[2]
                 password= data[3]
 
-                
                 service = "datos"
-                cadena_completa = '3'+' '+ name + ' ' + role + ' ' + email + ' ' + password
+                cadena_completa = '3'+' '+ name + ' ' + email + ' ' + password + ' ' + role
                 msg_len = len(cadena_completa) + len(service)
                 msg = f"{msg_len:05d}{service}{cadena_completa}"
-                print("desde crear user, este es el msg " + msg)
                 
-                # sock.sendall(msg.encode())
+                sock.sendall(msg.encode())
                 
-                # # Receive response
-                # response_len_str = sock.recv(5).decode()
-                # response_len = int(response_len_str)
-                # response_service = sock.recv(5).decode()
-                # response_data = sock.recv(response_len - 5).decode()
-                response_data = bdCall(msg)
-                print(response_data)
-                # print(f"Received: {response_data}")
-                #logging.info('Ingresando...')
+                # Receive response
                 
-                #logging.info(priv)
-                message = '00015datoscreateuser'.encode()
-                logging.info('sending {!r}'.format(message))                    
-                sock.sendall(message)
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                #print(response_data)
+
+                service = "userc"
+                final_message = '00015' + 'userc' +response_data [2:]
+                final_message_encode= final_message.encode()
+                logging.info('sending {!r}'.format(final_message_encode))
+                sock.sendall(final_message_encode)
+
             except Exception as e:
                 logging.error(f'Error: {e}')
                 logging.info('-------------------------------')

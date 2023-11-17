@@ -42,7 +42,7 @@ try:
             VALUES ( %s, %s, %s, %s)
         """, ( Nombre, Correo, Contrasena, Tipo))
         row_count = cursor.rowcount
-        print(row_count)
+        
         conn.commit()
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
@@ -90,16 +90,17 @@ try:
                     cadena = data[0]
                     opcion = cadena[5:]
                     print(opcion)
-                    if opcion == '1':
+                    #CREATE USER
+                    if opcion == '1': 
   
-                        logging.info('Ingresando...')
+                        logging.info('Ingresando ...')
                         priv = CreateUser(*data[1:6])
                         logging.info(priv)
                         message = '00015datoscreateuser {}'.format(priv).encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
                     
-                    
+                    #CREATE PRODUCT
                     elif opcion == '2':
                         
                         logging.info('Ingresando producto')
@@ -108,6 +109,7 @@ try:
                         message = '00018datoscreateproduct'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
+                    #CREATE 
                     elif opcion == '3':
                         #(ID_Usuario, Nombre, Correo, Contrasena, Tipo))
                         Name = data[1]
@@ -117,7 +119,6 @@ try:
                         print(Name)
                         logging.info('Creando Usuario')
                         priv = CreateUser(Name,email,password, role)
-                        logging.info(priv)
                         message = '00015datoscreateuser'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)

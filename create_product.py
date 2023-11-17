@@ -36,6 +36,7 @@ try:
         logging.info("Waiting for transactions create product")
         amount_received = 0
         amount_expected = int(sock.recv(5))
+        print(amount_expected)
         while amount_received < amount_expected:
             data = sock.recv(amount_expected - amount_received)
             amount_received += len(data)
@@ -59,14 +60,18 @@ try:
                 formatted_data = f"2 {Nombre} {Caracteristicas} {Fecha_Vencimiento} {Temperatura_Optima} {Stock}"
                 msg_len = len(formatted_data) + 5  # 5 for "datos"
                 msg = f"{msg_len:05d}datos{formatted_data}"
-                
+                sock.sendall(msg.encode())
                 logging.info(f'Sending this msg to the db: {msg}')
-                
-                # Call to send this formatted message
-                response_data = bdCall(msg)
+
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                            
                 logging.info(f'Database response: {response_data}')
                 #logging.info(priv)
-                message = '00015datoscreateproduct'.encode()
+
+                message = '00015crprdcreateproduct'.encode()
                 logging.info('sending {!r}'.format(message))                    
                 sock.sendall(message)
             except Exception as e:
