@@ -71,14 +71,42 @@ try:
             print("2.Obtener informacion de stock de bodega")
             print("3.Obtener informacion de entrada y salida a la bodega")
             print("4.")
+            print("5. Modificar Stock")
             print("7. Salir")
+
+
+
 
             opcion = input("Ingrese la opción deseada: ")
 
             if opcion == "1":
-               print("falta poner aqui lo ya creado para crear usuario")
-               print("          ")
+
+                service = "userc"
+                namenew = input("Ingrese nombre del trabajador: ")
+                rolenew = input("Ingrese cargo del trabajador: ")
+                emailnew = input("Ingrese correo del trabajador: ")
+                password = input("Ingrese contraseña del trabajador: ") 
+                data = namenew+ ' '+rolenew+' '+emailnew+' '+password  
+                
+                msg_len = len(service) + len(data)
+                msg = f"{msg_len:05d}{service}{data}"
+                print(msg)
+                # Send message
+                sock.sendall(msg.encode())
+
+                # Receive response
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+
+                print(f"Received: {response_data}")
+
+                
+
+           
             
+
             elif opcion == "2":
                 #####################FETCH PRODUCTS###############
                 msg = 'bodga1'
@@ -125,8 +153,31 @@ try:
 
                 
 
+
+            elif opcion == "5":
+                    service = "mdstk"
+                    print("MODIFICAR STOCK")
+                    
+                    id_product = input("Ingrese el ID del producto: ")
+                    cantidadnew = input("Ingrese el nuevo stock: ")
+                    
+                    data=  id_product + ' ' + cantidadnew
+                    msg_len = len(service) + len(data)
+                    msg = f"{msg_len:05d}{service}{data}"
+                    print(msg)
+                    # Send message
+                    sock.sendall(msg.encode())
+
+                    # Receive response
+                    response_len_str = sock.recv(5).decode()
+                    response_len = int(response_len_str)
+                    response_service = sock.recv(5).decode()
+                    response_data = sock.recv(response_len - 5).decode()
+                    print(f"Received: {response_data}")
+                    
                         
             elif opcion == "7":
+
                 break
             else:
                 print("Opción no válida. Intente de nuevo.")

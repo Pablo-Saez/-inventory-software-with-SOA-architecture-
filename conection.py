@@ -74,6 +74,7 @@ try:
     def GetProducts():
         cursor.execute("""
             SELECT * FROM producto
+            ORDER BY ID_PRODUCTO ASC
             """)
         result = cursor.fetchall()
         
@@ -85,7 +86,18 @@ try:
         result = cursor.fetchall()
         return result
 
-
+    def ModStock(Id, Stock):
+            cursor.execute("""
+                UPDATE producto
+                SET Stock = %s
+                where ID_PRODUCTO = %s
+            """, ( Stock, Id))
+            row_count = cursor.rowcount
+            
+            conn.commit()
+            if row_count > 0:
+                logging.info("Stock Modificado con éxito.")
+                return row_count
 
 
 
@@ -167,6 +179,7 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message.encode())
                     elif opcion == '5':
+
                         param = data[1]
                         print(param)
                         if param == 'products':
@@ -203,7 +216,17 @@ try:
                         
 
                         
-
+                    elif opcion == '6':
+                        
+                        Id = data[1]
+                        Stock = data[2]
+    
+                        logging.info('Modificando Stock')
+                        priv = ModStock(Id,Stock)
+                        
+                        message = '00015datosmodifstock'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
                         
 
 
