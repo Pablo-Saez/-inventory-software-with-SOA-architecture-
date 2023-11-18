@@ -79,6 +79,12 @@ try:
         result = cursor.fetchall()
         
         return result
+    def GetEntrada_Salida():
+        cursor.execute("""
+            SELECT * FROM entrada_salida_bodega
+            """)
+        result = cursor.fetchall()
+        return result
 
     def ModStock(Id, Stock):
             cursor.execute("""
@@ -173,22 +179,42 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message.encode())
                     elif opcion == '5':
-                        products = GetProducts()
-                        print("desde la opcion 5:")
-                       
-                        msg = 'datos'
 
-                        # Iterar sobre cada producto en la respuesta de la base de datos
-                        for product in products:
-                            # Extraer el ID, nombre y stock de cada producto
-                            id_producto, nombre, _, _, _, stock = product
+                        param = data[1]
+                        print(param)
+                        if param == 'products':
+                            products = GetProducts()
+                            msg = 'datos'
+                           
 
-                            # Imprimir la información
-                            msg += f" {id_producto} {nombre} {stock}"
-                        len_msg = len(msg)
-                        cadena_final = f"{len_msg:05d}{msg}"
-                        logging.info('sending {!r}'.format(cadena_final))
-                        sock.sendall(cadena_final.encode())
+                            # Iterar sobre cada producto en la respuesta de la base de datos
+                            for product in products:
+                                # Extraer el ID, nombre y stock de cada producto
+                                id_producto, nombre, _, _, _, stock = product
+
+                                # Imprimir la información
+                                msg += f" {id_producto} {nombre} {stock}"
+                            len_msg = len(msg)
+                            cadena_final = f"{len_msg:05d}{msg}"
+                            logging.info('sending {!r}'.format(cadena_final))
+                            sock.sendall(cadena_final.encode())
+                        elif param == 'in_out':
+                            print("entrada y salida de bodega")
+                            in_outs = GetEntrada_Salida()
+                            print(in_outs)
+                            msg = 'datos'
+                            for in_out in in_outs:
+                                # Extraer el ID, nombre y stock de cada producto
+                                id, id_usuario, procedimiento, fecha, hora = in_out
+
+                                # Imprimir la información
+                                msg += f" {id} {id_usuario} {procedimiento} {fecha} {hora}"
+                            len_msg = len(msg)
+                            cadena_final = f"{len_msg:05d}{msg}"
+                            logging.info('sending {!r}'.format(cadena_final))
+                            sock.sendall(cadena_final.encode())
+                        
+
                         
                     elif opcion == '6':
                         

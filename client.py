@@ -68,13 +68,19 @@ try:
             print("BIENVENIDO " + name  + " ERES USUARIO TIPO: " +role)
             print("Seleccione una opcion:")
             print("1.Crear Usuario")
-            print("2.Obtener informacion de bodega")
-            print("3. Modificar Stock")
-            print("4. Salir")
+            print("2.Obtener informacion de stock de bodega")
+            print("3.Obtener informacion de entrada y salida a la bodega")
+            print("4.")
+            print("5. Modificar Stock")
+            print("7. Salir")
+
+
+
 
             opcion = input("Ingrese la opción deseada: ")
 
             if opcion == "1":
+
                 service = "userc"
                 namenew = input("Ingrese nombre del trabajador: ")
                 rolenew = input("Ingrese cargo del trabajador: ")
@@ -97,6 +103,10 @@ try:
                 print(f"Received: {response_data}")
 
                 
+
+           
+            
+
             elif opcion == "2":
                 #####################FETCH PRODUCTS###############
                 msg = 'bodga1'
@@ -117,10 +127,34 @@ try:
                 # Almacenar los valores en un arreglo de a 3
                 productos = [palabras[i:i+3] for i in range(0, len(palabras), 3)]
                 columnas_productos = ['ID_PRODUCTO','NOMBRE PRODUCTO', 'STOCK']
-                ####################FETCH MOVIMIENTOS
                 print(tabulate(productos,headers=columnas_productos,tablefmt='grid'))
-
             elif opcion == "3":
+                ####################FETCH MOVIMIENTOS###########
+                msg = 'bodga2'
+                len_msg = len(msg)
+                msg_final = f"{len_msg:05d}{msg}"
+                logging.info('sending {!r}'.format(msg_final))
+                sock.sendall(msg_final.encode())
+
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                print(response_data)
+
+                linea=response_data[4:]
+                palabras = linea.split()
+                in_outs = [palabras[i:i+5] for i in range(0, len(palabras), 5)]
+                columnas_in_out = ['ID','ID USUARIO A CARGO','TIPO PROCEDIMIENTO','FECHA','HORA']
+                print(tabulate(in_outs,headers=columnas_in_out,tablefmt='grid'))
+
+
+
+
+                
+
+
+            elif opcion == "5":
                     service = "mdstk"
                     print("MODIFICAR STOCK")
                     
@@ -141,7 +175,9 @@ try:
                     response_data = sock.recv(response_len - 5).decode()
                     print(f"Received: {response_data}")
                     
-            elif opcion == "4":
+                        
+            elif opcion == "7":
+
                 break
             else:
                 print("Opción no válida. Intente de nuevo.")
