@@ -98,6 +98,12 @@ try:
             if row_count > 0:
                 logging.info("Stock Modificado con éxito.")
                 return row_count
+    def GetReportes():
+        cursor.execute("""
+            SELECT * FROM reporte_supervision
+            """)
+        result = cursor.fetchall()
+        return result
 
 
 
@@ -213,6 +219,22 @@ try:
                             cadena_final = f"{len_msg:05d}{msg}"
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
+                        elif param == 'reports':
+                            print("entregar reportes de la bd")
+                            reports = GetReportes()
+                            msg = 'datos'
+                            for report in reports:
+                                # Extraer el ID, nombre y stock de cada producto
+                                id, id_usuario, descripcion, fecha, hora = report
+
+                                # Imprimir la información
+                                msg += f"|{id}|{id_usuario}|{descripcion}|{fecha}|{hora}"
+                            len_msg = len(msg)
+                            cadena_final = f"{len_msg:05d}{msg}"
+                            logging.info('sending {!r}'.format(cadena_final))
+                            sock.sendall(cadena_final.encode())
+                            
+                            
                         
 
                         

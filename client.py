@@ -70,7 +70,7 @@ try:
             print("1.Crear Usuario")
             print("2.Obtener informacion de stock de bodega")
             print("3.Obtener informacion de entrada y salida a la bodega")
-            print("4.")
+            print("4.Obtener informacion de los reportes generados")
             print("5. Modificar Stock")
             print("7. Salir")
 
@@ -147,7 +147,25 @@ try:
                 in_outs = [palabras[i:i+5] for i in range(0, len(palabras), 5)]
                 columnas_in_out = ['ID','ID USUARIO A CARGO','TIPO PROCEDIMIENTO','FECHA','HORA']
                 print(tabulate(in_outs,headers=columnas_in_out,tablefmt='grid'))
+            elif opcion == "4":
+                msg = 'bodga3'
+                len_msg = len(msg)
+                msg_final = f"{len_msg:05d}{msg}"
+                logging.info('sending {!r}'.format(msg_final))
+                sock.sendall(msg_final.encode())
+                
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                
 
+                linea=response_data[5:]
+                palabras = linea.split('|')
+                
+                in_outs = [palabras[i:i+5] for i in range(0, len(palabras), 5)]
+                columnas_reports = ['ID','ID USUARIO REPORTE','DESCRIPCION','FECHA','HORA']
+                print(tabulate(in_outs,headers=columnas_reports,tablefmt='grid'))
 
 
 

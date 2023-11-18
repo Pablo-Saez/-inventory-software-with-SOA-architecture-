@@ -61,6 +61,22 @@ try:
                     cadena_final = f"{len_response_data:05d}bodga{response_data}"                
                     logging.info('sending {!r}'.format(cadena_final))
                     sock.sendall(cadena_final.encode())
+                elif opcion=='3': #reportes
+                    message = '00014datos5 reports'
+                    logging.info ('sending to bbdd {!r}'.format (message))
+                    sock.sendall(message.encode())
+
+                    response_len_str = sock.recv(5).decode()
+                    response_len = int(response_len_str)
+                    response_service = sock.recv(5).decode()
+                    response_data = sock.recv(response_len - 5).decode()
+                    print(f"Received: {response_data}")
+
+                    len_response_data = len(response_data)+5
+                    cadena_final = f"{len_response_data:05d}bodga{response_data}"                
+                    logging.info('sending {!r}'.format(cadena_final))
+                    sock.sendall(cadena_final.encode())
+                    
 
 
 
