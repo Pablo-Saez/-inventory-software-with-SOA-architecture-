@@ -74,12 +74,24 @@ try:
     def GetProducts():
         cursor.execute("""
             SELECT * FROM producto
+            ORDER BY ID_PRODUCTO ASC
             """)
         result = cursor.fetchall()
         
         return result
 
-
+    def ModStock(Id, Stock):
+            cursor.execute("""
+                UPDATE producto
+                SET Stock = %s
+                where ID_PRODUCTO = %s
+            """, ( Stock, Id))
+            row_count = cursor.rowcount
+            
+            conn.commit()
+            if row_count > 0:
+                logging.info("Stock Modificado con éxito.")
+                return row_count
 
 
 
@@ -163,14 +175,13 @@ try:
                     elif opcion == '5':
                         products = GetProducts()
                         print("desde la opcion 5:")
-                        
+                       
                         msg = 'datos'
-                        max_largo_msg = 85
 
                         # Iterar sobre cada producto en la respuesta de la base de datos
                         for product in products:
                             # Extraer el ID, nombre y stock de cada producto
-                            id_producto, nombre, _, _, stock, _ = product
+                            id_producto, nombre, _, _, _, stock = product
 
                             # Imprimir la información
                             msg += f" {id_producto} {nombre} {stock}"
@@ -179,7 +190,17 @@ try:
                         logging.info('sending {!r}'.format(cadena_final))
                         sock.sendall(cadena_final.encode())
                         
-
+                    elif opcion == '6':
+                        
+                        Id = data[1]
+                        Stock = data[2]
+    
+                        logging.info('Modificando Stock')
+                        priv = ModStock(Id,Stock)
+                        
+                        message = '00015datosmodifstock'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
                         
 
 
