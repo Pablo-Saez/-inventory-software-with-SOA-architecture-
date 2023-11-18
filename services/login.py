@@ -46,9 +46,9 @@ try:
                 response_data = sock.recv(response_len - 5).decode()
                 print(response_data)
 
-                print("entro 1")
+                
                 msg_response=  'login' + response_data [2:]
-                print("entro 2")
+               
                 len_msg = len(msg_response)
                 final_msg_response = f"{len_msg:05d}{msg_response}"
                 print(final_msg)

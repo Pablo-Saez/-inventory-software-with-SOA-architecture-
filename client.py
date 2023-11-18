@@ -1,5 +1,9 @@
+#sudo docker run -d -p 5000:5000 jrgiadach/soabus:v1
 import socket
-
+import logging
+import sys
+from tabulate import tabulate
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # Función para enviar un mensaje al servidor
 def enviar_mensaje(service, data):
     print(data)
@@ -35,8 +39,6 @@ while True:
 
     # Aquí estamos llamando al servicio LOGIN
     enviar_mensaje("login", data_login)
-    # recibir_respuesta()
-
     response_len_str = sock.recv(5).decode()
     response_len = int(response_len_str)
     response_service = sock.recv(5).decode()
@@ -60,22 +62,48 @@ while True:
 
 
 try:
-    while True:
-        #PARA ESTE PUNTO TENDREMOS LAS VARIABLES DE SESION EN email,password,name,role
-        print("BIENVENIDO " + name  + " ERES USUARIO TIPO: " +role)
-        print("2. Salir")
+    if role == 'Administrador':
+        while True:
+            #PARA ESTE PUNTO TENDREMOS LAS VARIABLES DE SESION EN email,password,name,role
+            print("BIENVENIDO " + name  + " ERES USUARIO TIPO: " +role)
+            print("Seleccione una opcion:")
+            print("1.Crear Usuario")
+            print("2.Obtener informacion de bodega")
+            print("3. Salir")
 
-        opcion = input("Ingrese la opción deseada: ")
+            opcion = input("Ingrese la opción deseada: ")
 
-        if opcion == "1":
-            service = input("Ingrese el servicio: ")
-            data = input("Ingrese los datos: ")
-            enviar_mensaje(service, data)
-            recibir_respuesta()
-        elif opcion == "2":
-            break
-        else:
-            print("Opción no válida. Intente de nuevo.")
+            if opcion == "1":
+               print("falta poner aqui lo ya creado para crear usuario")
+               print("          ")
+            elif opcion == "2":
+                #####################FETCH PRODUCTS###############
+                msg = 'bodga1'
+                len_msg = len(msg)
+                msg_final = f"{len_msg:05d}{msg}"
+                logging.info('sending {!r}'.format(msg_final))
+                sock.sendall(msg_final.encode())
+
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                #print(response_data)
+                linea = response_data[4:]
+                # Dividir la línea en palabras
+                palabras = linea.split()
+
+                # Almacenar los valores en un arreglo de a 3
+                productos = [palabras[i:i+3] for i in range(0, len(palabras), 3)]
+                columnas_productos = ['ID_PRODUCTO','NOMBRE PRODUCTO', 'STOCK']
+                ####################FETCH MOVIMIENTOS
+                print(tabulate(productos,headers=columnas_productos,tablefmt='grid'))
+
+                        
+            elif opcion == "3":
+                break
+            else:
+                print("Opción no válida. Intente de nuevo.")
 
 finally:
     print('Closing socket')

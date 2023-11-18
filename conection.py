@@ -71,6 +71,14 @@ try:
         else:
             # Si no hay coincidencias, la cuenta no existe
             return None
+    def GetProducts():
+        cursor.execute("""
+            SELECT * FROM producto
+            """)
+        result = cursor.fetchall()
+        
+        return result
+
 
 
 
@@ -152,6 +160,27 @@ try:
                         message = f"{response_len:05d}datos{response}"
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message.encode())
+                    elif opcion == '5':
+                        products = GetProducts()
+                        print("desde la opcion 5:")
+                        
+                        msg = 'datos'
+                        max_largo_msg = 85
+
+                        # Iterar sobre cada producto en la respuesta de la base de datos
+                        for product in products:
+                            # Extraer el ID, nombre y stock de cada producto
+                            id_producto, nombre, _, _, stock, _ = product
+
+                            # Imprimir la información
+                            msg += f" {id_producto} {nombre} {stock}"
+                        len_msg = len(msg)
+                        cadena_final = f"{len_msg:05d}{msg}"
+                        logging.info('sending {!r}'.format(cadena_final))
+                        sock.sendall(cadena_final.encode())
+                        
+
+                        
 
 
 
