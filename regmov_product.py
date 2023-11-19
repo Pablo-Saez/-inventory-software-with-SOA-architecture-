@@ -4,8 +4,8 @@ import sys
 import logging
 
 def bdCall(msg):
-    print("desde Registrar Movimiento de Producto, este es el msg " + msg)
-
+    print("desde Registrar Movimiento de Producto, este es el msg  " + msg)
+    print("test")
     sock.sendall(msg.encode())
 
     # Recibir respuesta
