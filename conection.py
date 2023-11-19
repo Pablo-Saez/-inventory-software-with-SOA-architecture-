@@ -135,6 +135,26 @@ try:
         else:
             return
 
+    def GetUsers():
+        cursor.execute("""
+            SELECT * FROM usuario
+            """)
+        result = cursor.fetchall()
+        return result
+    
+    def RecordInOut(id_user,state,date,time):
+        cursor.execute("""
+            INSERT INTO entrada_salida_bodega (id_usuario, procedimiento, fecha, hora)
+            VALUES (%s, %s, %s, %s)
+        """, (id_user,state,date,time))
+        row_count = cursor.rowcount
+        
+        conn.commit()
+        if row_count > 0:
+            logging.info("movimiento registrado con éxito.")
+            return row_count
+
+
 
 
 
@@ -263,7 +283,7 @@ try:
                             cadena_final = f"{len_msg:05d}{msg}"
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
-                            
+
                     elif opcion == '6':
                         
                         Id = data[1]
@@ -275,6 +295,35 @@ try:
                         message = '00015datosmodifstock'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
+                    
+
+                    elif opcion=='8':
+                        users = GetUsers()
+                        msg = 'datos'
+                        for user in users:
+                                # Extraer el ID, nombre y stock de cada producto
+                                id_usuario, nombre, correo,_,tipo = user
+
+                                # Imprimir la información
+                                msg += f" {id_usuario} {nombre} {correo} {tipo}"
+                        len_msg = len(msg)
+                        cadena_final = f"{len_msg:05d}{msg}"
+                        logging.info('sending {!r}'.format(cadena_final))
+                        sock.sendall(cadena_final.encode())
+                    elif opcion=='9':
+                        id_user = data[1]
+                        state = data[2]
+                        date = data[3]
+                        time = data[4]
+                        func = RecordInOut(id_user,state,date,time)
+                        logging.info(func)
+                        message = '00013datosregistro'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
+
+                        
+
+
                         
                     elif opcion == '7':
                         
