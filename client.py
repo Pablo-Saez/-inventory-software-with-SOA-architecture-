@@ -72,6 +72,7 @@ try:
             print("3.Obtener informacion de entrada y salida a la bodega")
             print("4.Obtener informacion de los reportes generados")
             print("5. Modificar Stock")
+            print("6. Crear Producto")
             print("7. Salir")
 
 
@@ -193,7 +194,29 @@ try:
                     response_data = sock.recv(response_len - 5).decode()
                     print(f"Received: {response_data}")
                     
-                        
+            elif opcion == "6":
+                service = "crprd"
+                print("CREAR PRODUCTO")
+                nombre = input("Ingrese el nombre del producto: ")
+                caracteristicas = input("Ingrese la descripción: ")
+                fecha_vencimiento = input("Ingrese la fecha en formato yyyy-mm-dd, (en caso de no tener aprete enter)")
+                temperatura_optima = input("Indique la temperatura optima del producto: ")
+                stock = input("Ingrese la cantidad del producto: ")
+                
+                data=  nombre + ' ' + caracteristicas + ' ' + fecha_vencimiento + ' ' + temperatura_optima + ' ' + stock
+                msg_len = len(service) + len(data)
+                msg = f"{msg_len:05d}{service}{data}"
+                print(msg)
+                # Send message
+                sock.sendall(msg.encode())
+
+                # Receive response
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+
+                print(f"Received: {response_data}")               
             elif opcion == "7":
 
                 break
