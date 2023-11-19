@@ -220,11 +220,11 @@ try:
                 print("CREAR PRODUCTO")
                 nombre = input("Ingrese el nombre del producto: ")
                 caracteristicas = input("Ingrese la descripción: ")
-                fecha_vencimiento = input("Ingrese la fecha en formato yyyy-mm-dd, (en caso de no tener aprete enter)")
+                dias_caducidad = input("Ingrese la cantidad de dias para caducidad: ")
                 temperatura_optima = input("Indique la temperatura optima del producto: ")
                 stock = input("Ingrese la cantidad del producto: ")
                 
-                data=  nombre + ' ' + caracteristicas + ' ' + fecha_vencimiento + ' ' + temperatura_optima + ' ' + stock
+                data=  nombre + ' ' + caracteristicas + ' ' + dias_caducidad + ' ' + temperatura_optima + ' ' + stock
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
                 print(msg)

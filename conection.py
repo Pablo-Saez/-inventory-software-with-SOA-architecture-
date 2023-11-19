@@ -47,11 +47,11 @@ try:
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
             return row_count
-    def CreateProduct(Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock):
+    def CreateProduct(Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock):
         cursor.execute("""
-            INSERT INTO Producto (Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock)
+            INSERT INTO Producto (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock)
             VALUES (%s, %s, %s, %s, %s)
-        """, (Nombre, Caracteristicas, Fecha_Vencimiento, Temperatura_Optima, Stock))
+        """, (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock))
         conn.commit()
 
         row_count = cursor.rowcount
