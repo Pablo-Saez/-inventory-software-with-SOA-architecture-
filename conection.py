@@ -104,6 +104,36 @@ try:
             """)
         result = cursor.fetchall()
         return result
+    
+    def RegisterProduct(Id,operacion,cantidad):
+        if operacion == "Entrada":
+            cursor.execute("""
+            UPDATE producto
+            SET Stock = Stock + %s
+            where ID_PRODUCTO = %s
+            """, ( cantidad, Id))
+            row_count = cursor.rowcount
+            
+            conn.commit()
+            if row_count > 0:
+                logging.info("Registro de stock realizado con éxito.")
+                return row_count
+        
+        elif operacion == "Salida":
+            print("salidaaaa")
+            cursor.execute("""
+            UPDATE producto
+            SET Stock = Stock - %s
+            where ID_PRODUCTO = %s
+            """, ( cantidad, Id))
+            row_count = cursor.rowcount
+            
+            conn.commit()
+            if row_count > 0:
+                logging.info("Registro de stock realizado con éxito.")
+                return row_count
+        else:
+            return
 
 
 
@@ -234,15 +264,11 @@ try:
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
                             
-                            
-                        
-
-                        
                     elif opcion == '6':
                         
                         Id = data[1]
                         Stock = data[2]
-    
+
                         logging.info('Modificando Stock')
                         priv = ModStock(Id,Stock)
                         
@@ -250,6 +276,18 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
                         
+                    elif opcion == '7':
+                        
+                        Id = data[1]
+                        operacion = data[2]
+                        cantidad = data[3]
+
+                        logging.info('Registrando Movimiento de producto')
+                        priv = RegisterProduct(Id,operacion,cantidad)
+                        
+                        message = '00015datosregdeprodc'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)   
 
 
 
