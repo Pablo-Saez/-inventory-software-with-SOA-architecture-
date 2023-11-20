@@ -33,7 +33,7 @@ try:
             try:
                 if opcion == '1':
 
-                    msg = '8'
+                    msg = '10'
                     service = "datos"
                     msg_len = len(msg) + len(service)              
                     final_msg = f"{msg_len:05d}{service}{msg}"

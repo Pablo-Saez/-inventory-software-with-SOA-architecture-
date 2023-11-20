@@ -79,11 +79,17 @@ try:
         else:
             # Si no hay coincidencias, la cuenta no existe
             return None
-    def GetProducts():
+    def GetProductsBodega():
         cursor.execute("""
-            SELECT * FROM producto
-            ORDER BY ID_PRODUCTO ASC
-            """)
+            SELECT
+                pb.id_producto,
+                p.nombre,
+                pb.stock
+            FROM
+                productos_bodega AS pb
+            JOIN
+                producto AS p ON pb.id_producto = p.id_producto
+        """)
         result = cursor.fetchall()
         
         return result
@@ -247,13 +253,16 @@ try:
                         param = data[1]
                         print(param)
                         if param == 'products':
-                            products = GetProducts()
+                            products = GetProductsBodega()
+                            print("productos:")
+                            print(products)
+
                             msg = 'datos'
 
                             # Iterar sobre cada producto en la respuesta de la base de datos
                             for product in products:
                                 # Extraer el ID, nombre y stock de cada producto
-                                id_producto, nombre, _, _, _, stock = product
+                                id_producto, nombre, stock = product
 
                                 # Imprimir la información
                                 msg += f" {id_producto} {nombre} {stock}"
@@ -343,7 +352,7 @@ try:
                         message = '00015datosregdeprodc'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
-                    elif opcion == '8':
+                    elif opcion == '10':
                         msg = 'datos'
 
                         logging.info('Monitor productos en expiracion')
