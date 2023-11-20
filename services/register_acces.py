@@ -61,6 +61,39 @@ try:
                     final_msg_encode= final_msg_response.encode()
                     logging.info('sending {!r}'.format(final_msg_response))
                     sock.sendall(final_msg_encode)
+                if opcion=='2':
+                    id_user = data[1]
+                    descripcion = data[2]
+                    fecha_reporte = data[3]
+                    hora_reporte = data[4]
+                    msg = '11'+ ' '+id_user + ' ' + descripcion + ' ' + fecha_reporte + ' ' + hora_reporte
+                    service = "datos"
+                    msg_len = len(msg) + len(service)              
+                    final_msg = f"{msg_len:05d}{service}{msg}"
+
+                    logging.info ('sending to bbdd {!r}'.format (final_msg))
+                    sock.sendall(final_msg.encode())
+
+                    response_len_str = sock.recv(5).decode()
+                    response_len = int(response_len_str)
+                    response_service = sock.recv(5).decode()
+                    response_data = sock.recv(response_len - 5).decode()
+                    print(response_data)
+
+                    msg_response=  'rgacc' + response_data [2:]
+                
+                    len_msg = len(msg_response)
+                    final_msg_response = f"{len_msg:05d}{msg_response}"
+                    print(final_msg)
+                    final_msg_encode= final_msg_response.encode()
+                    logging.info('sending {!r}'.format(final_msg_response))
+                    sock.sendall(final_msg_encode)
+
+
+                    
+
+
+
                  
         
             except:
