@@ -94,11 +94,11 @@ try:
             print("2.Obtener informacion de stock de bodega")
             print("3.Obtener informacion de entrada y salida a la bodega")
             print("4.Obtener informacion de los reportes generados")
-            print("5. Modificar Stock")
-            print("6. Crear Producto")
-            print("7. Registrar movimiento de producto")
-            print("8. Revisar productos cerca de expiracion")
-            print("9. Salir")
+            print("5.Modificar Stock")
+            print("6.Crear Producto")
+            print("7.Registrar movimiento de producto")
+            print("8.Revisar productos cerca de expiracion")
+            print("9.Salir")
 
             opcion = input("Ingrese la opción deseada: ")
 
@@ -289,6 +289,7 @@ try:
             print("BIENVENIDO " + name  + " ERES USUARIO TIPO: " +role)
             print("Seleccione una opcion:")
             print("1.Registrar entrada o salida")
+            print("2.Salir")
 
             opcion = input("Ingrese la opción deseada: ")
 
@@ -336,6 +337,39 @@ try:
                     print("Error.")
                 else:
                     print("Error al registrar porfavor intentelo denuevo.")
+            elif opcion == "2":
+                break
+
+    elif role=='Supervisor':
+        while True:
+            print("BIENVENIDO " + name  + " ERES USUARIO TIPO: " +role)
+            print("Seleccione una opcion:")
+            print("1.Generar reporte")
+            print("2.Salir")
+
+            opcion = input("Ingrese la opción deseada: ")
+            if opcion=='1':
+                print("Reportes!.")
+                id_usuario = input("Ingrese el ID del usuario a cargo del reporte: ")
+                descripcion = input("Ingrese la descripcion del reporte: ") 
+                fecha_reporte = input("Ingrese la fecha en formato XXXX-MM-DD: ")
+                hora_reporte = input("Ingrese la hora en formato HH:MM:SS: ")
+                service = 'rgacc'
+                data='2'+ ' ' + id_usuario + ' ' +descripcion+ ' ' + fecha_reporte + ' ' + hora_reporte
+                msg_len = len(service) + len(data)
+                msg = f"{msg_len:05d}{service}{data}"
+                print(msg)
+                # Send message
+                sock.sendall(msg.encode())
+
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                print(f"Received: {response_data}")
+
+
+
                 
 
 
