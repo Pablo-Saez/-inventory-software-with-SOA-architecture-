@@ -245,7 +245,7 @@ try:
                 opcionreg = input("Entrada o Salida del Producto: ") 
                 cantidadnew = input("Cantidad: ")
                 current_fecha = input("ingrese fecha en formato YYYY-MM-DD: ")
-                current_hora = input("ingrese la hora en formato HH-MM-SS: ")
+                current_hora = input("ingrese la hora en formato HH:MM:SS: ")
                 
                                   
                 data=  id_user + ' ' +id_product+ ' ' + opcionreg+ ' ' +cantidadnew+ ' ' +current_fecha+ ' ' +current_hora
@@ -311,7 +311,7 @@ try:
                     print("Entrada no válida. Debe ingresar 1 para entrada o 0 para salida.")
                 
                 current_fecha = input("ingrese fecha en formato YYYY-MM-DD: ")
-                current_hora = input("ingrese la hora en formato HH-MM-SS: ")
+                current_hora = input("ingrese la hora en formato HH:MM:SS: ")
 
                 msg = 'rgacc1' + ' ' +current_id + ' '+ state + ' ' + current_fecha + ' ' + current_hora
                 len_msg = len(msg)
