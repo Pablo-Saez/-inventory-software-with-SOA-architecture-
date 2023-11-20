@@ -156,6 +156,18 @@ try:
         result = cursor.fetchall()
         return result
     
+    def CreateReport(id_usuario, descripcion, fecha, hora):
+        cursor.execute("""
+            INSERT INTO reporte_supervision (id_usuario, descripcion, fecha, hora)
+            VALUES (%s, %s, %s, %s)
+        """, (id_usuario, descripcion, fecha, hora))
+        conn.commit()
+
+        row_count = cursor.rowcount
+        if row_count > 0:
+            logging.info("Reporte creado con éxito.")
+        return row_count
+    
     def RecordInOut(id_user,state,date,time):
         cursor.execute("""
             INSERT INTO entrada_salida_bodega (id_usuario, procedimiento, fecha, hora)
@@ -360,7 +372,18 @@ try:
                         
                         message = '00015rvprxp'.encode()
                         logging.info('sending {!r}'.format(message))
-                        sock.sendall(message)   
+                        sock.sendall(message) 
+                    elif opcion=='11':
+                        print(data)
+                        logging.info('Ingresando reporte')
+                        print(data[1:5])
+                        priv = CreateReport(*data[1:5])
+                        logging.info(priv)
+                        message = '00017datoscreatereport'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)
+
+
 
 
 
