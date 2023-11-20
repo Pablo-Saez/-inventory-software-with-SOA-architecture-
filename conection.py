@@ -102,7 +102,7 @@ try:
 
     def ModStock(Id, Stock):
             cursor.execute("""
-                UPDATE producto
+                UPDATE productos_bodega
                 SET Stock = %s
                 where ID_PRODUCTO = %s
             """, ( Stock, Id))
@@ -122,7 +122,7 @@ try:
     def RegisterProduct(Id,operacion,cantidad):
         if operacion == "Entrada":
             cursor.execute("""
-            UPDATE producto
+            UPDATE productos_bodega
             SET Stock = Stock + %s
             where ID_PRODUCTO = %s
             """, ( cantidad, Id))
@@ -134,9 +134,9 @@ try:
                 return row_count
         
         elif operacion == "Salida":
-            print("salidaaaa")
+      
             cursor.execute("""
-            UPDATE producto
+            UPDATE productos_bodega
             SET Stock = Stock - %s
             where ID_PRODUCTO = %s
             """, ( cantidad, Id))
@@ -146,6 +146,21 @@ try:
             if row_count > 0:
                 logging.info("Registro de stock realizado con éxito.")
                 return row_count
+        else:
+            return
+        
+    def RegisterMov(id_product,Id_user,opcionreg,cantidadnew,current_fecha,current_hora):
+        print("estoy aca")
+        cursor.execute("""
+            INSERT INTO movimiento (id_producto, id_usuario, tipo, cantidad, fecha ,hora)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """, (id_product,Id_user,opcionreg,cantidadnew,current_fecha,current_hora))
+        row_count = cursor.rowcount
+        
+        conn.commit()
+        if row_count > 0:
+            logging.info("movimiento registrado con éxito.")
+            return row_count
         else:
             return
 
@@ -342,16 +357,21 @@ try:
 
                         
                     elif opcion == '7':
-                        Id = data[1]
-                        operacion = data[2]
-                        cantidad = data[3]
+                        Id_user = data[1]
+                        id_product = data[2]
+                        opcionreg = data[3]
+                        cantidadnew = data[4]
+                        current_fecha = data[5]
+                        current_hora = data[6]
 
                         logging.info('Registrando Movimiento de producto')
-                        priv = RegisterProduct(Id,operacion,cantidad)
+                        priv = RegisterProduct(id_product,opcionreg,cantidadnew)
+                        priv = RegisterMov(id_product,Id_user,opcionreg,cantidadnew,current_fecha,current_hora)
                         
                         message = '00015datosregdeprodc'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
+                        
                     elif opcion == '10':
                         msg = 'datos'
 
