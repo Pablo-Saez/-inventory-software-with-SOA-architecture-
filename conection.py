@@ -55,11 +55,11 @@ try:
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
             return row_count
-    def CreateProduct(Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock):
+    def CreateProduct(Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima):
         cursor.execute("""
-            INSERT INTO Producto (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock)
-            VALUES (%s, %s, %s, %s, %s)
-        """, (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima, Stock))
+            INSERT INTO Producto (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima)
+            VALUES (%s, %s, %s, %s)
+        """, (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima))
         conn.commit()
 
         row_count = cursor.rowcount
@@ -206,9 +206,9 @@ try:
                     
                     #CREATE PRODUCT
                     elif opcion == '2':
-                        
+                        print(data)
                         logging.info('Ingresando producto')
-                        priv = CreateProduct(*data[1:6])
+                        priv = CreateProduct(*data[1:5])
                         logging.info(priv)
                         message = '00018datoscreateproduct'.encode()
                         logging.info('sending {!r}'.format(message))

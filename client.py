@@ -220,9 +220,9 @@ try:
                 caracteristicas = input("Ingrese la descripción: ")
                 dias_caducidad = input("Ingrese la cantidad de dias para caducidad: ")
                 temperatura_optima = input("Indique la temperatura optima del producto: ")
-                stock = input("Ingrese la cantidad del producto: ")
                 
-                data=  nombre + ' ' + caracteristicas + ' ' + dias_caducidad + ' ' + temperatura_optima + ' ' + stock
+                
+                data=  nombre + ' ' + caracteristicas + ' ' + dias_caducidad + ' ' + temperatura_optima + ' ' 
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
                 print(msg)

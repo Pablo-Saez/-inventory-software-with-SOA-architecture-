@@ -53,11 +53,11 @@ try:
                 Caracteristicas = data[1]
                 Dias_caducidad = data[2]
                 Temperatura_Optima = data[3]
-                Stock = data[4]
+                
                 
 
                 # Prepare data to be sent in a format that connection.py understands
-                formatted_data = f"2 {Nombre} {Caracteristicas} {Dias_caducidad} {Temperatura_Optima} {Stock}"
+                formatted_data = f"2 {Nombre} {Caracteristicas} {Dias_caducidad} {Temperatura_Optima}"
                 msg_len = len(formatted_data) + 5  # 5 for "datos"
                 msg = f"{msg_len:05d}datos{formatted_data}"
                 sock.sendall(msg.encode())
