@@ -36,7 +36,6 @@ try:
         logging.info("Waiting for transactions registrar stock")
         amount_received = 0
         amount_expected = int(sock.recv(5))
-        print(amount_expected)
         while amount_received < amount_expected:
             data = sock.recv(amount_expected - amount_received)
             amount_received += len(data)
@@ -45,13 +44,15 @@ try:
             try:
                 print(data)
                 data = data.decode().split()
-                Id = data[0]
-                Id = Id[5:]
-                operacion = data[1]
-                cantidad = data[2]
-                print(Id)
+                Id_user = data[0]
+                Id_user = Id_user[5:]
+                id_product = data[1]
+                opcionreg = data[2]
+                cantidadnew = data[3]
+                current_fecha = data[4]
+                current_hora = data[5]
                 # Prepare data to be sent in a format that connection.py understands
-                formatted_data = f"7 {Id} {operacion} {cantidad}"
+                formatted_data = f"7 {Id_user} {id_product} {opcionreg} {cantidadnew} {current_fecha} {current_hora}"
                 msg_len = len(formatted_data) + 5  # 5 for "datos"
                 msg = f"{msg_len:05d}datos{formatted_data}"
                 sock.sendall(msg.encode())

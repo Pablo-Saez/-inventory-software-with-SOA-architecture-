@@ -236,14 +236,19 @@ try:
                 response_data = sock.recv(response_len - 5).decode()
 
                 print(f"Received: {response_data}") 
+                
             elif opcion == "7": 
                 service = "rgprd"
                 print("REGISTRAR MOVIMIENTO DE PRODUCTO")
+                id_user = input("Ingrese el ID de usuario: ")
                 id_product = input("Ingrese el ID del producto: ")
                 opcionreg = input("Entrada o Salida del Producto: ") 
                 cantidadnew = input("Cantidad: ")
+                current_fecha = input("ingrese fecha en formato YYYY-MM-DD: ")
+                current_hora = input("ingrese la hora en formato HH-MM-SS: ")
+                
                                   
-                data=  id_product + ' ' +opcionreg+ ' ' + cantidadnew
+                data=  id_user + ' ' +id_product+ ' ' + opcionreg+ ' ' +cantidadnew+ ' ' +current_fecha+ ' ' +current_hora
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
                 print(msg)
