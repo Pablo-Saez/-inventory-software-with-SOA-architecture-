@@ -97,7 +97,8 @@ try:
             print("5. Modificar Stock")
             print("6. Crear Producto")
             print("7. Registrar movimiento de producto")
-            print("8. Salir")
+            print("8. Revisar productos cerca de expiracion")
+            print("9. Salir")
 
             opcion = input("Ingrese la opción deseada: ")
 
@@ -191,9 +192,6 @@ try:
 
 
 
-                
-
-
             elif opcion == "5":
                     service = "mdstk"
                     print("MODIFICAR STOCK")
@@ -208,7 +206,7 @@ try:
                     # Send message
                     sock.sendall(msg.encode())
 
-                    # Receive response
+                    # Receive responsele 
                     response_len_str = sock.recv(5).decode()
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
@@ -258,8 +256,24 @@ try:
                 response_service = sock.recv(5).decode()
                 response_data = sock.recv(response_len - 5).decode()
                 print(f"Received: {response_data}")
+            #
+            elif opcion == "8": 
+                service = "rvprxp"
+                print("Revisar productos cerca de expiracion:")    
+                msg_len = len(service)
+                msg = f"{msg_len:05d}{service}"
+                print(msg)
+                # Send message
+                sock.sendall(msg.encode())
+
+                # Receive response
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                print(f"Received: {response_data}")
                           
-            elif opcion == "8":
+            elif opcion == "9":
 
                 break
             else:

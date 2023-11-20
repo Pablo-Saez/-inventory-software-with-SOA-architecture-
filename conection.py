@@ -8,23 +8,31 @@ load_dotenv()
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 try:
-    # Establece la conexión con la base de datos PostgreSQL
-    #    conn = psycopg2.connect("postgres://powmhjrm:VNJkgl6HTbKcJKfqjzyy6n9EO2FZjbIV@suleiman.db.elephantsql.com/powmhjrm")
+    conn = psycopg2.connect(
+        dbname="powmhjrm",  # Actualiza el nombre de la base de datos
+        user="powmhjrm",  # Actualiza el usuario
+        password="VNJkgl6HTbKcJKfqjzyy6n9EO2FZjbIV",  # Actualiza la contraseña
+        host="suleiman.db.elephantsql.com",  # Actualiza el host
+        port="5432"  # El puerto generalmente es el mismo, pero confirma en tu dashboard
+    )
+    logging.info("Conexión a la base de datos exitosa.")
 
-    dbname = os.getenv("DB_NAME")
-    user = os.getenv("DB_USER")
-    password = os.getenv("DB_PASSWORD")
-    host = os.getenv("DB_HOST")
-    port = os.getenv("DB_PORT")
+    cursor = conn.cursor()
+    #dbname = os.getenv("DB_NAME")
+    #user = os.getenv("DB_USER")
+    #password = os.getenv("DB_PASSWORD")
+    #host = os.getenv("DB_HOST")
+    #port = os.getenv("DB_PORT")
 
     # Establecer la conexión con la base de datos PostgreSQL utilizando las variables de entorno
-    conn = psycopg2.connect(
+    
+    '''conn = psycopg2.connect(
         dbname=dbname,
         user=user,
         password=password,
         host=host,
         port=port
-    )
+    )'''
 
     logging.info("Conexión a la base de datos exitosa.")
 
@@ -241,7 +249,6 @@ try:
                         if param == 'products':
                             products = GetProducts()
                             msg = 'datos'
-                           
 
                             # Iterar sobre cada producto en la respuesta de la base de datos
                             for product in products:
@@ -326,7 +333,6 @@ try:
 
                         
                     elif opcion == '7':
-                        
                         Id = data[1]
                         operacion = data[2]
                         cantidad = data[3]
@@ -337,6 +343,16 @@ try:
                         message = '00015datosregdeprodc'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
+                    elif opcion == '8':
+                        msg = 'datos'
+
+                        logging.info('Monitor productos en expiracion')
+                        priv = RegisterProduct(Id,operacion,cantidad)
+                        
+                        message = '00015rvprxp'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)   
+
 
 
 
