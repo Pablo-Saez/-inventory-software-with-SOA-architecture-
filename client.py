@@ -98,7 +98,9 @@ try:
             print("6.Crear Producto")
             print("7.Registrar movimiento de producto")
             print("8.Revisar productos cerca de expiracion")
-            print("9.Salir")
+            print ("9.Agregar productos a bodega")
+            print ("10.Obtener informacion sobre movimientos de productos")
+            print("11.Salir")
 
             opcion = input("Ingrese la opción deseada: ")
 
@@ -170,6 +172,7 @@ try:
                 in_outs = [palabras[i:i+5] for i in range(0, len(palabras), 5)]
                 columnas_in_out = ['ID','ID USUARIO A CARGO','TIPO PROCEDIMIENTO','FECHA','HORA']
                 print(tabulate(in_outs,headers=columnas_in_out,tablefmt='grid'))
+                
             elif opcion == "4":
                 msg = 'bodga3'
                 len_msg = len(msg)
@@ -189,6 +192,7 @@ try:
                 in_outs = [palabras[i:i+5] for i in range(0, len(palabras), 5)]
                 columnas_reports = ['ID','ID USUARIO REPORTE','DESCRIPCION','FECHA','HORA']
                 print(tabulate(in_outs,headers=columnas_reports,tablefmt='grid'))
+
 
 
 
@@ -278,8 +282,53 @@ try:
                 response_data = sock.recv(response_len - 5).decode()
                 print(f"Received: {response_data}")
                           
-            elif opcion == "9":
 
+            elif opcion == "9": 
+                service = "adpbo"
+                print("Agregar productos a bodega:")    
+                
+                id_product = input("Ingrese el ID del producto: ")
+                cantidadnew = input("Cantidad: ")
+                fechaentrada = input("ingrese fecha en formato YYYY-MM-DD: ")       
+                                  
+                data=  id_product + ' ' +fechaentrada+ ' ' + cantidadnew
+                msg_len = len(service) + len(data)
+                msg = f"{msg_len:05d}{service}{data}"
+                print(msg)
+                # Send message
+                sock.sendall(msg.encode())
+
+                # Receive response
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                print(f"Received: {response_data}")
+                
+            elif opcion == "10":
+                #####################FETCH PRODUCTS###############
+                msg = 'bodga4'
+                len_msg = len(msg)
+                msg_final = f"{len_msg:05d}{msg}"
+                logging.info('sending {!r}'.format(msg_final))
+                sock.sendall(msg_final.encode())
+
+                response_len_str = sock.recv(5).decode()
+                response_len = int(response_len_str)
+                response_service = sock.recv(5).decode()
+                response_data = sock.recv(response_len - 5).decode()
+                #print(response_data)
+                linea = response_data[4:]
+                # Dividir la línea en palabras
+                palabras = linea.split()
+
+                # Almacenar los valores en un arreglo de a 3
+                movimientos = [palabras[i:i+6] for i in range(0, len(palabras), 6)]
+                columnas_productos = ['ID_PRODUCTO','NOMBRE PRODUCTO', 'TIPO DE MOVIMIENTO', 'CANTIDAD', 'FECHA', 'USUARIO']
+                #  id_product, nombre_prod, tipo, cantidad, fecha, nameuser = movimiento
+                print(tabulate(movimientos,headers=columnas_productos,tablefmt='grid'))
+                
+            elif opcion == "11":
                 break
             else:
                 print("Opción no válida. Intente de nuevo.")
@@ -319,9 +368,7 @@ try:
                 msg_final = f"{len_msg:05d}{msg}"
                 logging.info('sending {!r}'.format(msg_final))
                 sock.sendall(msg_final.encode())
-
-
-
+                
                 # Send message
                 
 
