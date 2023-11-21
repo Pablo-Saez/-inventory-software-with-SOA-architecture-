@@ -4,8 +4,8 @@ import sys
 import logging
 
 def bdCall(msg):
-    print("desde Registrar Movimiento de Producto, este es el msg  " + msg)
-    print("test")
+    # print("desde Registrar Movimiento de Producto, este es el msg  " + msg)
+    # print("test")
     sock.sendall(msg.encode())
 
     # Recibir respuesta
@@ -42,7 +42,7 @@ try:
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
             try:
-                print(data)
+                # print(data)
                 data = data.decode().split()
                 id_product = data[0]
                 id_product = id_product[5:]

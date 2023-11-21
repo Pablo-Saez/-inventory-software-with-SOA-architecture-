@@ -6,10 +6,10 @@ from tabulate import tabulate
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 # Función para enviar un mensaje al servidor
 def enviar_mensaje(service, data):
-    print(data)
+    # print(data)
     msg_len = len(service) + len(data)
     msg = f"{msg_len:05d}{service}{data}"
-    print(msg)
+    # print(msg)
     sock.sendall(msg.encode())
 
 # Función para recibir la respuesta del servidor
@@ -66,10 +66,10 @@ while True:
     response_len = int(response_len_str)
     response_service = sock.recv(5).decode()
     response_data = sock.recv(response_len - 5).decode()
-    print(f"Received: {response_data}")
+    # print(f"Received: {response_data}")
 
     status_login = response_data[:2]
-    print(status_login)
+    # print(status_login)
 
     if status_login == "OK":
         aux = response_data.split()
@@ -115,7 +115,7 @@ try:
                 
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 
@@ -206,7 +206,7 @@ try:
                     data=  id_product + ' ' + cantidadnew
                     msg_len = len(service) + len(data)
                     msg = f"{msg_len:05d}{service}{data}"
-                    print(msg)
+                    # print(msg)
                     # Send message
                     sock.sendall(msg.encode())
 
@@ -229,7 +229,7 @@ try:
                 data=  nombre + ' ' + caracteristicas + ' ' + dias_caducidad + ' ' + temperatura_optima + ' ' 
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 
@@ -255,7 +255,7 @@ try:
                 data=  id_user + ' ' +id_product+ ' ' + opcionreg+ ' ' +cantidadnew+ ' ' +current_fecha+ ' ' +current_hora
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 
@@ -271,7 +271,7 @@ try:
                 print("Revisar productos cerca de expiracion:")    
                 msg_len = len(service)
                 msg = f"{msg_len:05d}{service}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 
@@ -294,7 +294,7 @@ try:
                 data=  id_product + ' ' +fechaentrada+ ' ' + cantidadnew
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 
@@ -405,7 +405,7 @@ try:
                 data='2'+ ' ' + id_usuario + ' ' +descripcion+ ' ' + fecha_reporte + ' ' + hora_reporte
                 msg_len = len(service) + len(data)
                 msg = f"{msg_len:05d}{service}{data}"
-                print(msg)
+                # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
 

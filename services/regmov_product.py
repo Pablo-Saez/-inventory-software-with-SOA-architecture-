@@ -4,8 +4,8 @@ import sys
 import logging
 
 def bdCall(msg):
-    print("desde Registrar Movimiento de Producto, este es el msg  " + msg)
-    print("test")
+    # print("desde Registrar Movimiento de Producto, este es el msg  " + msg)
+    # print("test")
     sock.sendall(msg.encode())
 
     # Recibir respuesta
@@ -33,7 +33,7 @@ try:
     sock.sendall(message)
 
     while True:
-        logging.info("Waiting for transactions registrar stock")
+        logging.info("Waiting for transactions registrar movimiento")
         amount_received = 0
         amount_expected = int(sock.recv(5))
         while amount_received < amount_expected:
@@ -42,7 +42,7 @@ try:
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
             try:
-                print(data)
+                # print(data)
                 data = data.decode().split()
                 Id_user = data[0]
                 Id_user = Id_user[5:]

@@ -26,7 +26,7 @@ try:
             logging.info('received {!r}'.format(data))
             logging.info ("Processing login...")
             data = data.decode().split()
-            print(data)
+            #print(data)
             cadena = data[0]
             opcion = cadena[5:]
                     
@@ -46,14 +46,14 @@ try:
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
                     response_data = sock.recv(response_len - 5).decode()
-                    print(response_data)
+                    #print(response_data)
 
                     
                     msg_response=  'rvprxp' + response_data [2:]
                 
                     len_msg = len(msg_response)
                     final_msg_response = f"{len_msg:05d}{msg_response}"
-                    print(final_msg)
+                    #print(final_msg)
                     final_msg_encode= final_msg_response.encode()
                     logging.info('sending {!r}'.format(final_msg_response))
                     sock.sendall(final_msg_encode)
