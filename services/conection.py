@@ -150,7 +150,7 @@ try:
             return
         
     def RegisterMov(id_product,Id_user,opcionreg,cantidadnew,current_fecha,current_hora):
-       
+
         cursor.execute("""
             INSERT INTO movimiento (id_producto, id_usuario, tipo, cantidad, fecha ,hora)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -195,6 +195,8 @@ try:
             logging.info("movimiento registrado con éxito.")
             return row_count
 
+
+
     def MovProd(id_product,fechaentrada,cantidadnew):
         
         cursor.execute("""
@@ -233,6 +235,7 @@ try:
       
         result = cursor.fetchall()
         return result
+
 
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -313,11 +316,12 @@ try:
                     elif opcion == '5':
 
                         param = data[1]
-                        print(param)
+
+                        #print(param)
                         if param == 'products':
                             products = GetProductsBodega()
-                            print("productos:")
-                            print(products)
+                         #   print("productos:")
+                          #  print(products)
 
                             msg = 'datos'
 
@@ -361,6 +365,7 @@ try:
                             cadena_final = f"{len_msg:05d}{msg}"
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
+
                         
                         elif param == 'moviment':
                             print("entregar registros los movimientos")
@@ -378,6 +383,7 @@ try:
                             sock.sendall(cadena_final.encode())
                         
                         
+
 
                     elif opcion == '6':
                         
@@ -436,6 +442,7 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
                         
+
                     # elif opcion == '10':
                     #     msg = 'datos'
 
@@ -445,7 +452,7 @@ try:
                     #     message = '00015rvprxp'.encode()
                     #     logging.info('sending {!r}'.format(message))
                     #     sock.sendall(message) 
-                    
+
                     elif opcion=='11':
                         print(data)
                         logging.info('Ingresando reporte')
@@ -455,6 +462,7 @@ try:
                         message = '00017datoscreatereport'.encode()
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
+
 
                     elif opcion == '12':
                         id_product = data[1]
@@ -469,6 +477,7 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
                         
+
 
 
 
