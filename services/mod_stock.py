@@ -4,7 +4,7 @@ import sys
 import logging
 
 def bdCall(msg):
-    print("desde modifcar stock, este es el msg " + msg)
+    # print("desde modifcar stock, este es el msg " + msg)
 
     sock.sendall(msg.encode())
 
@@ -36,19 +36,19 @@ try:
         logging.info("Waiting for transactions modificar stock")
         amount_received = 0
         amount_expected = int(sock.recv(5))
-        print(amount_expected)
+        # print(amount_expected)
         while amount_received < amount_expected:
             data = sock.recv(amount_expected - amount_received)
             amount_received += len(data)
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
             try:
-                print(data)
+                # print(data)
                 data = data.decode().split()
                 Id = data[0]
                 Id = Id[5:]
                 Stock = data[1]
-                print(Id)
+                # print(Id)
                 # Prepare data to be sent in a format that connection.py understands
                 formatted_data = f"6 {Id} {Stock}"
                 msg_len = len(formatted_data) + 5  # 5 for "datos"

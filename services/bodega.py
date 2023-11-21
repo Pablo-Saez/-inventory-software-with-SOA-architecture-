@@ -25,7 +25,7 @@ try:
             amount_received += len (data)
             logging.info('received {!r}'.format(data))
             data = data.decode().split()
-            print(data)
+            # print(data)
             cadena = data[0]
             opcion = cadena[5:]
             try:
@@ -40,7 +40,7 @@ try:
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
                     response_data = sock.recv(response_len - 5).decode()
-                    print(f"Received: {response_data}")
+                    # print(f"Received: {response_data}")
                     
                     len_response_data = len(response_data)+5
                     cadena_final = f"{len_response_data:05d}bodga{response_data}"                
@@ -55,7 +55,7 @@ try:
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
                     response_data = sock.recv(response_len - 5).decode()
-                    print(f"Received: {response_data}")
+                    # print(f"Received: {response_data}")
 
                     len_response_data = len(response_data)+5
                     cadena_final = f"{len_response_data:05d}bodga{response_data}"                
@@ -70,7 +70,7 @@ try:
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
                     response_data = sock.recv(response_len - 5).decode()
-                    print(f"Received: {response_data}")
+                    # print(f"Received: {response_data}")
 
                     len_response_data = len(response_data)+5
                     cadena_final = f"{len_response_data:05d}bodga{response_data}"                
@@ -86,7 +86,7 @@ try:
                     response_len = int(response_len_str)
                     response_service = sock.recv(5).decode()
                     response_data = sock.recv(response_len - 5).decode()
-                    print(f"Received: {response_data}")
+                    # print(f"Received: {response_data}")
 
                     len_response_data = len(response_data)+5
                     cadena_final = f"{len_response_data:05d}bodga{response_data}"                

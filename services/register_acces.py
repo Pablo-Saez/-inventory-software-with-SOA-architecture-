@@ -26,7 +26,7 @@ try:
             logging.info('received {!r}'.format(data))
             logging.info ("Processing login...")
             data = data.decode().split()
-            print(data)
+            # print(data)
             cadena = data[0]
             opcion = cadena[5:]
                     

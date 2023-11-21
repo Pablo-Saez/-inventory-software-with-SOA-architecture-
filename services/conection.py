@@ -72,12 +72,15 @@ try:
             WHERE correo = %s AND contrasena = %s
         """, (email, password))
         result = cursor.fetchall()
-        print(result)
+        # print(result)
         if result:
+            logging.info("Login Realizado con éxito.")
+
             # Si hay coincidencias, significa que la cuenta existe
             return result
         else:
             # Si no hay coincidencias, la cuenta no existe
+            logging.info("Login sin éxito.")
             return None
     def GetProductsBodega():
         cursor.execute("""
@@ -91,6 +94,8 @@ try:
                 producto AS p ON pb.id_producto = p.id_producto
         """)
         result = cursor.fetchall()
+        logging.info("Productos entregados con éxito.")
+
         
         return result
     def GetEntrada_Salida():
@@ -98,6 +103,8 @@ try:
             SELECT * FROM entrada_salida_bodega
             """)
         result = cursor.fetchall()
+        logging.info("Reporte entregado con éxito.")
+
         return result
 
     def ModStock(Id, Stock):
@@ -117,6 +124,8 @@ try:
             SELECT * FROM reporte_supervision
             """)
         result = cursor.fetchall()
+        logging.info("Reportes Entregados con éxito.")
+
         return result
     
     def RegisterProduct(Id,operacion,cantidad):
@@ -169,6 +178,9 @@ try:
             SELECT * FROM usuario
             """)
         result = cursor.fetchall()
+        
+        logging.info("Usuarios entregados con éxito.")
+
         return result
     
     def CreateReport(id_usuario, descripcion, fecha, hora):
@@ -234,6 +246,7 @@ try:
         """)
       
         result = cursor.fetchall()
+        logging.info("Registro de movimiento entregado con éxito.")
         return result
 
 
@@ -261,10 +274,10 @@ try:
                 logging.info("Processing sql...")
                 try:
                     data = data.decode().split()
-                    print(data)
+                    # print(data)
                     cadena = data[0]
                     opcion = cadena[5:]
-                    print(opcion)
+                    # print(opcion)
                     #CREATE USER
                     if opcion == '1': 
   
@@ -277,7 +290,7 @@ try:
                     
                     #CREATE PRODUCT
                     elif opcion == '2':
-                        print(data)
+                        # print(data)
                         logging.info('Ingresando producto')
                         priv = CreateProduct(*data[1:5])
                         logging.info(priv)
@@ -291,7 +304,7 @@ try:
                         email = data[2]
                         password = data[3]
                         role = data[4]
-                        print(Name)
+                        # print(Name)
                         logging.info('Creando Usuario')
                         priv = CreateUser(Name,email,password, role)
                         message = '00015datoscreateuser'.encode()
@@ -300,9 +313,9 @@ try:
                     elif opcion == '4':
                         email = data[1]
                         password = data[2]
-                        print("desde el connection:")
-                        print(email)
-                        print(password)
+                        # print("desde el connection:")
+                        # print(email)
+                        # print(password)
                         data_login=Login(email,password)
                         nombre = data_login[0][1]
                         tipo = data_login[0][4]
@@ -337,9 +350,9 @@ try:
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
                         elif param == 'in_out':
-                            print("entrada y salida de bodega")
+                            # print("entrada y salida de bodega")
                             in_outs = GetEntrada_Salida()
-                            print(in_outs)
+                            # print(in_outs)
                             msg = 'datos'
                             for in_out in in_outs:
                                 # Extraer el ID, nombre y stock de cada producto
@@ -352,7 +365,7 @@ try:
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
                         elif param == 'reports':
-                            print("entregar reportes de la bd")
+                            # print("entregar reportes de la bd")
                             reports = GetReportes()
                             msg = 'datos'
                             for report in reports:
@@ -368,7 +381,7 @@ try:
 
                         
                         elif param == 'moviment':
-                            print("entregar registros los movimientos")
+                            # print("entregar registros los movimientos")
                             movimientos = GetMov()
                             msg = 'datos'
                             for movimiento in movimientos:
@@ -454,9 +467,9 @@ try:
                     #     sock.sendall(message) 
 
                     elif opcion=='11':
-                        print(data)
+                        # print(data)
                         logging.info('Ingresando reporte')
-                        print(data[1:5])
+                        # print(data[1:5])
                         priv = CreateReport(*data[1:5])
                         logging.info(priv)
                         message = '00017datoscreatereport'.encode()

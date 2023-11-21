@@ -30,7 +30,7 @@ try:
             logging.info("Calling the db for creation...")
             data = data.decode().split()
             try:
-                print(data)
+                # print(data)
 
                 cadena = data[0]
                 name = cadena[5:]
