@@ -150,7 +150,7 @@ try:
             return
         
     def RegisterMov(id_product,Id_user,opcionreg,cantidadnew,current_fecha,current_hora):
-        print("estoy aca")
+       
         cursor.execute("""
             INSERT INTO movimiento (id_producto, id_usuario, tipo, cantidad, fecha ,hora)
             VALUES (%s, %s, %s, %s, %s, %s)
@@ -195,9 +195,44 @@ try:
             logging.info("movimiento registrado con éxito.")
             return row_count
 
+    def MovProd(id_product,fechaentrada,cantidadnew):
+        
+        cursor.execute("""
+            INSERT INTO productos_bodega (id_producto, fecha_entrada, stock)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (id_producto) DO UPDATE SET fecha_entrada = %s, stock = %s;
+            """, (id_product, fechaentrada, cantidadnew, fechaentrada, cantidadnew))
+        row_count = cursor.rowcount
+        
+        conn.commit()
+        if row_count > 0:
+            logging.info("movimiento registrado con éxito.")
+            return row_count
+        else:
+            return
 
 
-
+    def GetMov():
+        cursor.execute("""
+            SELECT
+                mv.id_producto,
+                p.nombre,
+                mv.tipo,
+                mv.cantidad,
+                mv.fecha,
+                u.nombre
+                
+            
+            FROM
+                movimiento as mv
+            JOIN
+                producto AS p ON mv.id_producto = p.id_producto
+            JOIN
+                usuario AS u ON mv.id_usuario = u.id_usuario
+        """)
+      
+        result = cursor.fetchall()
+        return result
 
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -326,6 +361,23 @@ try:
                             cadena_final = f"{len_msg:05d}{msg}"
                             logging.info('sending {!r}'.format(cadena_final))
                             sock.sendall(cadena_final.encode())
+                        
+                        elif param == 'moviment':
+                            print("entregar registros los movimientos")
+                            movimientos = GetMov()
+                            msg = 'datos'
+                            for movimiento in movimientos:
+                                # Extraer el ID, nombre y stock de cada producto
+                                id_product, nombre_prod, tipo, cantidad, fecha, nameuser = movimiento
+
+                                # Imprimir la información
+                                msg += f" {id_product} {nombre_prod} {tipo} {cantidad} {fecha} {nameuser}"
+                            len_msg = len(msg)
+                            cadena_final = f"{len_msg:05d}{msg}"
+                            logging.info('sending {!r}'.format(cadena_final))
+                            sock.sendall(cadena_final.encode())
+                        
+                        
 
                     elif opcion == '6':
                         
@@ -384,15 +436,16 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)   
                         
-                    elif opcion == '10':
-                        msg = 'datos'
+                    # elif opcion == '10':
+                    #     msg = 'datos'
 
-                        logging.info('Monitor productos en expiracion')
-                        priv = RegisterProduct(Id,operacion,cantidad)
+                    #     logging.info('Monitor productos en expiracion')
+                    #     priv = RegisterProduct(Id,operacion,cantidad)
                         
-                        message = '00015rvprxp'.encode()
-                        logging.info('sending {!r}'.format(message))
-                        sock.sendall(message) 
+                    #     message = '00015rvprxp'.encode()
+                    #     logging.info('sending {!r}'.format(message))
+                    #     sock.sendall(message) 
+                    
                     elif opcion=='11':
                         print(data)
                         logging.info('Ingresando reporte')
@@ -403,7 +456,19 @@ try:
                         logging.info('sending {!r}'.format(message))
                         sock.sendall(message)
 
+                    elif opcion == '12':
+                        id_product = data[1]
+                        fechaentrada = data[2]
+                        cantidadnew = data[3]
+                        
 
+                        logging.info('Moviendo producto a bodega')
+                        priv = MovProd(id_product,fechaentrada,cantidadnew)
+                        
+                        message = '00015datosmoveprodct'.encode()
+                        logging.info('sending {!r}'.format(message))
+                        sock.sendall(message)   
+                        
 
 
 
