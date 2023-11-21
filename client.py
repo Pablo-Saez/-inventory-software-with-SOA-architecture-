@@ -267,10 +267,10 @@ try:
                 print(f"Received: {response_data}")
             #
             elif opcion == "8": 
-                service = "rvprxp"
+                service = "rvprx"
                 print("Revisar productos cerca de expiracion:")    
                 msg_len = len(service)
-                msg = f"{msg_len:05d}{service}"
+                msg = f"{msg_len:05d}{service}1"
                 # print(msg)
                 # Send message
                 sock.sendall(msg.encode())
@@ -280,7 +280,18 @@ try:
                 response_len = int(response_len_str)
                 response_service = sock.recv(5).decode()
                 response_data = sock.recv(response_len - 5).decode()
-                print(f"Received: {response_data}")
+                #print(response_data)
+                # Suponiendo que 'response_data' contiene la cadena "OK 20 Ramitas 22 3"
+                linea = response_data[3:]  # Ajuste del índice según la estructura de tu respuesta
+
+                palabras = linea.split()
+
+                in_outs = [palabras[i:i+4] for i in range(0, len(palabras), 4)]
+
+                columnas_reports = ['STATUS', 'ID PRODUCTO', 'NOMBRE PRODUCTO', 'STOCK', 'DIAS RESTANTES PARA VENCER']
+                print(tabulate([['OK'] + in_out for in_out in in_outs], headers=columnas_reports, tablefmt='grid'))
+
+                
                           
 
             elif opcion == "9": 
@@ -303,7 +314,7 @@ try:
                 response_len = int(response_len_str)
                 response_service = sock.recv(5).decode()
                 response_data = sock.recv(response_len - 5).decode()
-                print(f"Received: {response_data}")
+                #print(f"Received: {response_data}")
                 
             elif opcion == "10":
                 #####################FETCH PRODUCTS###############
@@ -324,7 +335,7 @@ try:
 
                 # Almacenar los valores en un arreglo de a 3
                 movimientos = [palabras[i:i+6] for i in range(0, len(palabras), 6)]
-                columnas_productos = ['ID_PRODUCTO','NOMBRE PRODUCTO', 'TIPO DE MOVIMIENTO', 'CANTIDAD', 'FECHA', 'USUARIO']
+                columnas_productos = ['ID_PRODUCTO','NOMBRE PRODUCTO', 'TIPO DE MOVIMIENTO', 'CANTIDAD', 'FECHA', 'USUARIO A CARGO']
                 #  id_product, nombre_prod, tipo, cantidad, fecha, nameuser = movimiento
                 print(tabulate(movimientos,headers=columnas_productos,tablefmt='grid'))
                 

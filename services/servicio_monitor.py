@@ -12,7 +12,7 @@ logging.info ('connecting to {} port {}'.format (*server_address))
 sock.connect (server_address)
 try:
     # Send data
-    message = b'00010sinitrvprxp' #rvprxp
+    message = b'00010sinitrvprx' #rvprx
     logging.info ('sending {!r}'.format (message))
     sock.sendall (message)
     while True:
@@ -49,7 +49,7 @@ try:
                     #print(response_data)
 
                     
-                    msg_response=  'rvprxp' + response_data [2:]
+                    msg_response=  'rvprx' + response_data [2:]
                 
                     len_msg = len(msg_response)
                     final_msg_response = f"{len_msg:05d}{msg_response}"

@@ -36,18 +36,18 @@ try:
         logging.info("Waiting for transactions create product")
         amount_received = 0
         amount_expected = int(sock.recv(5))
-        # print(amount_expected)
+        print(amount_expected)
         while amount_received < amount_expected:
             data = sock.recv(amount_expected - amount_received)
             amount_received += len(data)
             logging.info('received {!r}'.format(data))
             logging.info("Calling the db for creation...")
             try:
-                # print(data)
+                print(data)
                 data = data.decode().split()
                 Nombre = data[0]
                 Nombre = Nombre[5:]
-                # print(Nombre)
+                print(Nombre)
                 # Extract data for CreateProduct
                 
                 Caracteristicas = data[1]

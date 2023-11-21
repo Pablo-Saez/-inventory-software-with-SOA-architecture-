@@ -3,6 +3,7 @@ import socket
 import sys
 import logging
 import os
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 load_dotenv()
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
@@ -55,6 +56,33 @@ try:
         if row_count > 0:
             logging.info("Usuario creado con éxito.")
             return row_count
+    def GetAlerta():
+        
+        cursor.execute("""
+            SELECT
+                pb.id_producto,
+                p.nombre,
+                pb.stock,
+                pb.fecha_entrada,
+                p.dias_caducidad,
+                CURRENT_DATE AS current_day,
+                EXTRACT(DAY FROM (pb.fecha_entrada + p.dias_caducidad * INTERVAL '1 day' - CURRENT_DATE)) AS dias_para_vencer
+            FROM
+                productos_bodega AS pb
+            JOIN
+                producto AS p ON pb.id_producto = p.id_producto
+            WHERE
+                CURRENT_DATE BETWEEN (pb.fecha_entrada + p.dias_caducidad * INTERVAL '1 day' - INTERVAL '7 days')
+                                AND (pb.fecha_entrada + p.dias_caducidad * INTERVAL '1 day')
+                AND p.id_producto = pb.id_producto;
+        """)
+        resultados = cursor.fetchall()
+        
+        return resultados
+        
+    
+
+
     def CreateProduct(Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima):
         cursor.execute("""
             INSERT INTO Producto (Nombre, Caracteristicas, Dias_caducidad, Temperatura_Optima)
@@ -128,6 +156,9 @@ try:
 
         return result
     
+
+
+
     def RegisterProduct(Id,operacion,cantidad):
         if operacion == "Entrada":
             cursor.execute("""
@@ -142,6 +173,10 @@ try:
                 logging.info("Registro de stock realizado con éxito.")
                 return row_count
         
+   
+            
+
+       
         elif operacion == "Salida":
       
             cursor.execute("""
@@ -262,7 +297,6 @@ try:
         message = b'00010sinitdatos'
         logging.info('sending {!r}'.format(message))
         sock.sendall(message)
-
         while True:
             logging.info("Waiting for transaction BBDD")
             amount_received = 0
@@ -274,10 +308,11 @@ try:
                 logging.info("Processing sql...")
                 try:
                     data = data.decode().split()
-                    # print(data)
+                    print(data)
                     cadena = data[0]
                     opcion = cadena[5:]
-                    # print(opcion)
+                    #print(opcion)
+                    
                     #CREATE USER
                     if opcion == '1': 
   
@@ -456,15 +491,25 @@ try:
                         sock.sendall(message)   
                         
 
-                    # elif opcion == '10':
-                    #     msg = 'datos'
+                    elif opcion == '10':
+                        msg = 'datos'
 
-                    #     logging.info('Monitor productos en expiracion')
-                    #     priv = RegisterProduct(Id,operacion,cantidad)
+                        logging.info('Monitor productos en expiracion')
+                        priv = GetAlerta()
+                        print(priv)
+                        for alerta in priv:
+                            id_producto, nombre, stock, _,_,_,dias_para_vencer = alerta
+                            dias_int = int(dias_para_vencer)
+                            # Concatena la información en el mensaje
+                            msg += f" {id_producto} {nombre} {stock} {dias_int}"
+
                         
-                    #     message = '00015rvprxp'.encode()
-                    #     logging.info('sending {!r}'.format(message))
-                    #     sock.sendall(message) 
+                        
+                        len_msg = len(msg)
+                        cadena_final = f"{len_msg:05d}{msg}"
+
+                        logging.info('sending {!r}'.format(cadena_final))
+                        sock.sendall(cadena_final.encode()) 
 
                     elif opcion=='11':
                         # print(data)
