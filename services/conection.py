@@ -278,11 +278,11 @@ try:
                     elif opcion == '5':
 
                         param = data[1]
-                        print(param)
+                        #print(param)
                         if param == 'products':
                             products = GetProductsBodega()
-                            print("productos:")
-                            print(products)
+                         #   print("productos:")
+                          #  print(products)
 
                             msg = 'datos'
 
